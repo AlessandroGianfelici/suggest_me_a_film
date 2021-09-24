@@ -21,8 +21,12 @@ class MySpider(CrawlSpider):
         
         if "mymovies.it/film" in response.url:
             soup = BeautifulSoup(response.body, 'html.parser')
-            all_paragraph = soup.get_text()
-            txt_name = os.path.join("film", response.url.split("/")[-1] + '.txt')
+            
+            all_paragraph = soup.find_all('p')
+            mystring = ' '.join([par.get_text() for par in all_paragraph])
+            text = " ".join(mystring.split())
+            title = str(soup.find_all('title')[0]).replace(r'<title>', "").replace(" - MYmovies.it</title>", "")
+            txt_name = os.path.join("film", title+ '.txt')
             s = io.StringIO(all_paragraph)
             with open(txt_name, 'w') as f:
                 for line in s:
